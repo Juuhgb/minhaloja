@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minha-loja
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: minha-loja
+  template:
+    metadata:
+      labels:
+        app: minha-loja
+    spec:
+      containers:
+      - name: minha-loja
+        image: minha-loja:v1
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
