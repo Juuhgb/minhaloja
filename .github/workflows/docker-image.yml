@@ -1,18 +1,35 @@
+# Nome do workflow — aparece na aba "Actions" do repositório
 name: Docker Image CI
 
+# Define quando o workflow será executado
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  push:                    # Dispara quando houver um "push"
+    branches: [ "main" ]   # ... especificamente na branch "main"
+  pull_request:            # Também roda quando uma Pull Request for criada
+    branches: [ "main" ]   # ... que tenha como destino a branch "main"
 
+# Aqui começam os "jobs" — cada job é um conjunto de etapas (steps)
 jobs:
 
+  # Nome do job
   build:
 
-    runs-on: ubuntu-latest
+    # Define o sistema operacional onde o job vai rodar
+    runs-on: ubuntu-latest  # O GitHub Actions vai usar uma máquina virtual Ubuntu
 
+    # Lista de etapas que o GitHub vai executar
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      # Primeira etapa: fazer o checkout do código do repositório
+      - uses: actions/checkout@v4  
+        # "uses" significa usar uma ação pronta — nesse caso, a oficial do GitHub
+        # Essa ação clona o repositório dentro do ambiente do Actions,
+        # permitindo que as próximas etapas acessem os arquivos do projeto.
+
+      # Segunda etapa: construir a imagem Docker
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+        # "run" executa um comando no terminal dentro do ambiente do Actions.
+        # Aqui, o Docker vai construir uma imagem usando o "Dockerfile" do projeto.
+        # O parâmetro "--tag" dá um nome à imagem: "my-image-name:<timestamp>"
+        # O "$(date +%s)" adiciona um número único (timestamp) ao nome da imagem,
+        # garantindo que cada build gere uma imagem com nome diferente.
